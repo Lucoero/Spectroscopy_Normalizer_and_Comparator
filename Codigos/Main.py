@@ -36,10 +36,14 @@ Lamb2,Flux2 = LD.Load_Dat(S2)
 Lamb3,Flux3 = LD.Load_Dat(S3)
 
 Lamb4,Flux4 = LD.Load_Dat(S4)
+
 #MLamb,MFlux = LD.Load_Miles(Miles_Name)
+
+T1 = 
+
 #%% Correcciones
 #%% Ploteado
 
-SSp.Compare_Spectra(np.array([Lamb1,Lamb2,Lamb3],dtype = object),np.array([Flux1,Flux2,Flux3],dtype = object),lines = lineas)
+SSp.Compare_Spectra(np.array([Lamb1,Lamb2,Lamb3,Lamb4],dtype = object),np.array([Flux1,Flux2,Flux3,Flux4],dtype = object),lines = lineas)
 
 #SSp.Blank_Spectra(MLamb, MFlux)

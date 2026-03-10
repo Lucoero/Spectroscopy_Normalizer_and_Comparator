@@ -46,7 +46,7 @@ def Lined_Spectra(lamb,flux,lines, title = "Lined_Spectra"):
     fig.show()
     return
 
-def Compare_Spectra(lambArr,fluxArr,lines = {}, title = "Comparison between Spectras"):
+def Compare_Spectra(lambArr,fluxArr,TArr = [],lines = {}, title = "Comparison between Spectras"):
     """
     Compare_Spectra:
         Ploteamos uno al lado del otro varios espectros para compararlos. Si se dan lineas
@@ -55,6 +55,7 @@ def Compare_Spectra(lambArr,fluxArr,lines = {}, title = "Comparison between Spec
     Entrada:
         LambsArr: Array de array de longitudes de onda
         FluxArr: Array de array de Flujos
+        TArr: Array de temperaturas de cada una
     """
     n = len(lambArr)
     fig,ax = plt.subplots(n,1, figsize = (60,6),sharex=True, sharey=False)
@@ -64,8 +65,8 @@ def Compare_Spectra(lambArr,fluxArr,lines = {}, title = "Comparison between Spec
     maxLine = np.max(fluxArr)*yscale
     
     for i in range(n):          
-        ax[i].set_ylabel("Flujo (uds arbitrarias)")
-        ax[i].set_title(f"Spectra {i}")
+        ax[i].set_ylabel("Flux (uds)")
+        ax[i].set_title(f"Spectra {i+1}  (Temp Estimada: {TArr[i]} K")
         #Ploteamos los espectros
         ax[i].plot(lambArr[i],fluxArr[i],linewidth = lWidth)
     
