@@ -35,7 +35,7 @@ def get_Temp(lamb, flux): #Saca temperatura con Ley Wien
 
     lamb_max = lamb[index]
 
-    T= b/lamb_max
+    T= np.round(b/lamb_max)
 
     return T
 
