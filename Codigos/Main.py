@@ -20,6 +20,13 @@ Miles_Name = "s0010.fits"
 
 
 # Diccionario de lineas que vamos a marcar
+Lineas= {
+    'Hb': 6563,
+    'Hgamma': 4861,
+    'Hdelta': 4340,
+    'Hepsilon': 4120
+    }
+
 #%% Obtencion de datos
 
 Lamb1, Flux1 = LD.Load_Dat(S1)
