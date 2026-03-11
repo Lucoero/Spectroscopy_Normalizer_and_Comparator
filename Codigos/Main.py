@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import Load_Data as LD
 import Show_Spectra as SSp
 import parametros as Par
+import Herramientas as Herr
 
 plt.close("all")
 #%% Variables de llamada
@@ -109,6 +110,8 @@ TArr = np.array([T1,T2,T3,T4])
 LambsArr = np.array([Lamb1,Lamb2,Lamb3,Lamb4],dtype = object)
 FluxsArr = np.array([Flux1,Flux2,Flux3,Flux4],dtype = object)
 #%% Normalizacion
+start= np.where(Flux1 == np.max(Flux1))
+Nada, Lamb1_lineas,Nada2= Herr.BuscadorMinimos(np.array([Lamb1,Flux1],dtype= object),start)
 #%% Ploteado
 
 SSp.Compare_Spectra(LambsArr,FluxsArr,TArr = TArr,lines = lines)
