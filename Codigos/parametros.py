@@ -42,9 +42,9 @@ def get_Temp(lamb, flux): #Saca temperatura con Ley Wien
 
     return T
 
-def picos (wave, flux, lineas, dist=100):
+def picos (wave, flux, lineas, dist=10):
     '''
-    La salida de la función es del tipo [picos,[prom,ancho]]; siendo cada elemento un array. La función siempre encuentra pico
+    La salida de la función es del tipo [picos,[prom,ancho]]; siendo cada elemento un array. En caso de no encontrar pico devuelve [0,[0,0]]
     '''
     peaks, props = [], []   #se inicilizan las listas vacías (sé que el append es lento de cojones pero macho que son 4 cosas
     for line in lineas:     
@@ -54,11 +54,13 @@ def picos (wave, flux, lineas, dist=100):
         rango = -1*flux[a:b] #se delimita el rango de búsqueda de picos 
         ind, prop = find_peaks(rango, distance=2*dist) #el find peaks busca el pico más `significativo` que hay en el rango 
         if ind == []:    #por si no hay picos
-            break
-        ind += a    #se recentra el índice para los datos de longitud de onda dados
-        propiedades = [peak_prominences(rango, ind)[0], peak_widths(rango, ind)[0]] #información adicional de los picos
-        peaks.append(wave[ind])
-        props.append(propiedades) #se añaden los datos a la lista. se pude hacer sin el apend pero es más coñazo porque la entrada es un diccionario
+            ind = 0
+            propiedades = [0,0]
+        else:    
+            ind += a    #se recentra el índice para los datos de longitud de onda dados
+            propiedades = [peak_prominences(rango, ind)[0], peak_widths(rango, ind)[0]] #información adicional de los picos
+            peaks.append(wave[ind])
+            props.append(propiedades) #se añaden los datos a la lista. se pude hacer sin el apend pero es más coñazo porque la entrada es un diccionario
     return peaks, props
     
       
