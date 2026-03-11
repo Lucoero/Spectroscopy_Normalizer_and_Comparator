@@ -6,12 +6,12 @@ from scipy.signal import savgol_filter
 from scipy.signal import hilbert
 
 
-def filtro(wave, flux, params, tipo='med'):
+def filtro(flux, params, tipo='med'):
     if tipo == 'med':
         return medfilt(flux, *params)
     if tipo == 'mmed':
         s = medfilt(flux, params[0])
-        for i in params[1:]:
+        for i in params:
             s = medfilt(s, i)
         return s
     elif tipo == 'sg':

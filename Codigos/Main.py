@@ -11,7 +11,7 @@ import parametros as Par
 import Herramientas as Herr
 import normalizar as norm
 
-
+from scipy.signal import envelope
 
 
 plt.close("all")
@@ -124,14 +124,17 @@ SSp.Compare_Spectra(LambsArr,FluxsArr,TArr = TArr,lines = lines)
 plt.show()
 
 #SSp.Blank_Spectra(MLamb, MFlux)
-par = [93,53,33]
+par = [123]
 
 
-y = norm.filtro(Lamb1, Flux1, par, 'mmed')
+y = norm.filtro(Lamb1, Flux4, par)
+
+y = norm.filtro(Lamb1, y, par)
+y = norm.filtro(Lamb1, y, [53])
 
 
 
-plt.plot(Lamb1, Flux1)
-plt.plot(Lamb1, y)
+plt.plot(Lamb4, Flux4)
+plt.plot(Lamb4, y)
 plt.show()
-plt.plot(Lamb1,[Flux1[i]/y[i] for i in range(len(Flux1))])
+plt.plot(Lamb4,[Flux1[i]/y[i] for i in range(len(Flux1))])
