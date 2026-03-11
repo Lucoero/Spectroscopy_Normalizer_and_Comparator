@@ -89,12 +89,15 @@ def categorizar(wave,flux,lineas,cat):
                 - Se van debilitando las lineas H8, H9
                 - Es importante la linea Ca II, que se vuelve super profunda hasta saturar
                 - Empieza a haber una fusion entre CaII H + Hepsi
-                
             
         5. TIPO G:
-        
+                - Aparece la banda G (molecular). Cerca de los 4320 A
+                - La clasificador de luminosidad se basa en comparar la banda G con la de H delta
         6. TIPO K:
-        
+                - Importa Ca I 4227 en especial en K5
+                - Las bandas moleculares empiezan a dominar
+                - Aparece la franja TiO alpha, que es una estructura de balcones entre 4800 y 5600 A
         7. TIPO M:
+                - Ca I 4226 es un valle cada vez mas prominente
     """
     return "Hola"
