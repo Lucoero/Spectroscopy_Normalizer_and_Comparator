@@ -6,7 +6,7 @@ from scipy.signal import savgol_filter
 from scipy.signal import hilbert
 
 
-def filtro(flux, params, tipo='med'):
+def Filtrar(flux, params, tipo='med'):
     if tipo == 'med':
         return medfilt(flux, *params)
     if tipo == 'mmed':
@@ -18,3 +18,24 @@ def filtro(flux, params, tipo='med'):
         return savgol_filter(flux, *params)
     elif tipo == 'h':
         return hilbert(flux)
+
+def Normalizar(filtro, flujo, parametro, iteraciones): #Donde filtro es el tipo de filtro segun filtrar
+    
+    '''
+    Los tipos de filtro posibles son:
+        
+        med
+        mmed
+        sg
+        h
+    '''
+
+    normalizada_vieja= flujo
+    for i in range(iteraciones):
+        normalizada_nueva= Filtrar(normalizada_vieja,parametro, tipo= filtro)
+        
+        normalizada_vieja= normalizada_nueva
+    
+    return normalizada_vieja
+    
+    
