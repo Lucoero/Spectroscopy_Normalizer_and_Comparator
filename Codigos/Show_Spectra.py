@@ -128,15 +128,16 @@ def Compare_Norms(defArr,normArr,fitArr,TArr = [],lines = {}, title = "Spectra N
         Axe_Blank_Spectra(defArr[0,0], defArr[0,1],ax[0]) # lineas solo en el normalizado
         Axe_Lined_Spectra(normArr[0,0], normArr[0,1], lines,ax[1])
         # Ponemos los fits
-        ajustes, = ax[0].plot(defArr[0,0],fitArr[0],linestyle = "dashed", label = "ajuste")
-        ax[0].legend(handles = [ajustes], loc = "upper left")
+        ajustes, = ax[0].plot(defArr[0,0],fitArr[0],linestyle = "dashed")# label = "ajuste")
+        #ax[0].legend(handles = [ajustes], loc = "upper left")
     else:
         Axe_Compare_Spectra(defArr[:,0], defArr[:,1], ax[:,0],TArr = TArr, lines = {},show_T = False) # Lineas solo en el normalizado
         Axe_Compare_Spectra(normArr[:,0], normArr[:,1],ax[:,1],TArr = TArr, lines = lines)
         # Ponemos los fits
         for i in range(n):  
-            ajustes, = ax[i,0].plot(defArr[i,0],fitArr[i],linestyle = "dashed", label = "ajuste")
-            ax[i,0].legend(handles = [ajustes], loc = "upper right")
+            ajustes, = ax[i,0].plot(defArr[i,0],fitArr[i],linestyle = "dashed")# label = "ajuste")
+            #ax[i,0].legend(handles = [ajustes], loc = "upper right")
+    
     fig.legend(ncol = ncol)
     fig.show()
     return 

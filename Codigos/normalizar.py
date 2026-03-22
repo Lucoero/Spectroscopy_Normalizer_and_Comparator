@@ -47,8 +47,8 @@ def Normalizar(flujo, params,corte = 9000 ,  filtro = 'med', iteraciones = 1): #
     normalizada_vieja = flujo
     for i in range(iteraciones):
         normalizada_nueva = Filtrar(normalizada_vieja,params, tipo= filtro)
-        
         normalizada_vieja = normalizada_nueva
+        
     # Ya esta ajustada
     ajuste = normalizada_vieja
     

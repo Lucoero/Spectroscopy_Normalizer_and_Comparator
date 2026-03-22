@@ -115,7 +115,7 @@ TArr = np.array([T1,T2,T3,T4])
 LambsArr = np.array([Lamb1,Lamb2,Lamb3,Lamb4],dtype = object)
 FluxsArr = np.array([Flux1,Flux2,Flux3,Flux4],dtype = object)
 #%% Normalizacion
-nIter = 2
+nIter = 10
 params = [97] # Es el filtro de mediana (que separacion consideras para cortar y tal)
 
 A1,N1 = Norm.Normalizar(Flux1,params,iteraciones = nIter)
