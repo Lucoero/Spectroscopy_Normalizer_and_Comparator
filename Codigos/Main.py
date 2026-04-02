@@ -124,11 +124,15 @@ fit1,N1 = Norm.Normalizar(Lamb1,Flux1,params,iteraciones = nIter)
 fit2,N2 = Norm.Normalizar(Lamb2,Flux2,params,iteraciones = nIter)
 fit3,N3 = Norm.Normalizar(Lamb3,Flux3,params,iteraciones = nIter)
 fit4,N4 = Norm.Normalizar(Lamb4,Flux4,params,iteraciones = nIter)
-
+"""
 fitMiles,NMiles = Norm.Normalizar(MLamb,MFlux,iteraciones = 50)
 SSp.Compare_Norms(np.array([np.array([MLamb,MFlux],dtype = object)]),np.array([np.array([MLamb,NMiles],dtype = object)]), np.array([fitMiles]))
+"""
 #%% Busqueda del espectro (KS)
-smChosen,minD,DArr = Par.CompareAllSpectra("Catalogo_Miles",(Lamb1,Flux1))
+smChosen1,minD1,DArr1 = Par.CompareAllSpectra("Catalogo_Miles",(Lamb1,Flux1),lines = lines)
+smChosen2,minD2,DArr2 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb2,Flux2),lines = lines)
+smChosen3,minD3,DArr3 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb3,Flux3),lines = lines)
+smChosen4,minD4,DArr4 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb4,Flux4), lines = lines)
 #%% Ploteado
 """
 #SSp.Compare_Spectra(LambsArr,FluxsArr,TArr = TArr,lines = lines)

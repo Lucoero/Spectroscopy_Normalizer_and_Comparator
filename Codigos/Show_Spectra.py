@@ -14,10 +14,11 @@ lWidth = 1 # Grosor de las lineas de plot
 lineScale = 1 # Escala para las lineas atomicas
 ncol = 1 # Numero de columnas para la leyenda
 #%% Funciones
-def Pad_Array(arr): # Gracias, https://stackoverflow.com/questions/24494356/how-to-find-min-max-values-in-array-of-variable-length-arrays-with-numpy    
+def Pad_Array(arr): # Gracias, https://stackoverflow.com/questions/24494356/how-to-find-min-max-values-in-array-of-variable-length-arrays-with-numpy   
+    nArr = len(arr)
     M = max(len(a) for a in arr) # Calculamos la longitud maxima de los arrays
-    out = np.zeros((len(arr),M),dtype = object)
-    for i in range(len(arr)):
+    out = np.zeros((nArr,M),dtype = object)
+    for i in range(nArr):
         out[i] = np.array(list(arr[i])+[np.nan]*(M-len(arr[i])))
     return out
 
@@ -96,8 +97,8 @@ def Axe_Compare_Spectra(lambArr,fluxArr, ax,TArr = [],lines = {},show_T = True):
     # Esto da problemas si el array de flujos no es una matriz cuadrada
         # Arreglo: creamos una matriz cuadrada con nans y buscamos ahi
     pad = Pad_Array(fluxArr) 
-    minLine = np.nanmin(pad)*yscale
-    maxLine = np.nanmax(pad)*yscale
+    minLine = max(np.nanmin(pad)*yscale,0)
+    maxLine = min(np.nanmax(pad)*yscale,5)
     if len(TArr) == 0:
         TArr = ["Not Estimated"] *n
     for i in range(n):          
@@ -115,7 +116,7 @@ def Axe_Compare_Spectra(lambArr,fluxArr, ax,TArr = [],lines = {},show_T = True):
         for i in range(1,n):
             ax[i].plot((lines[name],lines[name]), (minLine,maxLine), linestyle = "dashed",linewidth = lWidth * lineScale)
     return 
-def Compare_Norms(defArr,normArr,fitArr,TArr = [],lines = {}, title = "Spectra Normalized", onlyObject = False):
+def Compare_Norms(defArr,normArr,fitArr = [],TArr = [],lines = {}, title = "Spectra Normalized", onlyObject = False):
     """
     Compare_Norms:
         Ploteamos a la izquierda como era el espectro antes de normalizarse
@@ -137,6 +138,7 @@ def Compare_Norms(defArr,normArr,fitArr,TArr = [],lines = {}, title = "Spectra N
     fig.suptitle(title)
     if n == 1:
         Axe_Blank_Spectra(defArr[0,0], defArr[0,1],ax[0]) # lineas solo en el normalizado
+
         Axe_Lined_Spectra(normArr[0,0], normArr[0,1], lines,ax[1])
         # Ponemos los fits
         ajustes, = ax[0].plot(fitArr[0,0],fitArr[0,1],linestyle = "dashed")# label = "ajuste")
@@ -145,7 +147,7 @@ def Compare_Norms(defArr,normArr,fitArr,TArr = [],lines = {}, title = "Spectra N
         Axe_Compare_Spectra(defArr[:,0], defArr[:,1], ax[:,0],TArr = TArr, lines = {},show_T = False) # Lineas solo en el normalizado
         Axe_Compare_Spectra(normArr[:,0], normArr[:,1],ax[:,1],TArr = TArr, lines = lines)
         # Ponemos los fits
-        for i in range(n):  
+        for i in range(len(fitArr)):  
             ajustes, = ax[i,0].plot(fitArr[i,0],fitArr[i,1],linestyle = "dashed")# label = "ajuste")
             #ax[i,0].legend(handles = [ajustes], loc = "upper right")
     

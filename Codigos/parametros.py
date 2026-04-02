@@ -108,7 +108,7 @@ def categorizar(wave,flux,lineas,cat):
     """
     return "Hola"
 
-def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10**4):
+def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10**4, lines = {}):
     """
     CompareAllSpectra
     Dada una carpeta con ficheros en formato miles ([lambda,flux]), y un espectro problema en formato
@@ -141,6 +141,10 @@ def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10
     """
         # Normalizamos 
     spFit, spFlux = normalizar.Normalizar(spLamb,spFlux, iteraciones = 50)
+    """
+    SSp.Blank_Spectra(spLamb, spFlux)
+    SSp.Blank_Spectra(spLamb,objSpectra[1])
+    """
     spInterpol = make_smoothing_spline(spLamb, spFlux,lam = 0)
     spMinLamb = np.min(spLamb)
     spMaxLamb = np.max(spLamb)
@@ -156,23 +160,35 @@ def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10
         smInterpol =  make_smoothing_spline(smLamb, smFlux,lam = 0)
         # Comparo KS en un mismo dominio
         lambArr = np.linspace(minLamb, maxLamb,int(nPoints))
-        ksResult = kstest(smInterpol(lambArr),spInterpol(lambArr),N = len(lambArr))
+        ksResult = kstest(smInterpol(lambArr),spInterpol(lambArr))
         # Almaceno los resultados
         DArr[i] = ksResult[0] # Podriamos guardar tambien los pvalues
         
     # Tomo el minimo 
     minD = np.min(DArr)    
-    indexMin = np.where(DArr == minD)
+    indexMin = np.where(DArr == minD)[0][0]
     # Busco a que espectro corresponde
     smChosen = FilesArr[indexMin]
     # Printeo el resultado
-    print(f"KS Tests says that {smChosen} is the most probable type with distance {minD}")
+    print(f"KS Tests says that {smChosen} is the most probable spectra with distance {minD}")
     print("Showing the comparison of spectras")
     # Printeamos la comparacion
     smLamb,smFlux = Load.Load_Miles(smChosen, path = dataFolder)
-    smFit,smNormFlux = normalizar.Normalizar(smLamb, smFlux)
-    defArr = np.array([np.array([objSpectra[0],objSpectra[1]],dtype = object),np.array([smLamb,smFlux],dtype = object)])
-    normArr = np.array([np.array([spLamb,spFlux],dtype = object),np.array([smLamb,smNormFlux],dtype = object)])
+    smFit,smNormFlux = normalizar.Normalizar(smLamb, smFlux, iteraciones = 50)
+    defArr = np.empty((2,2), dtype=object)
+    defArr[0,0] = objSpectra[0]
+    defArr[0,1] = objSpectra[1]
+    defArr[1,0] = smLamb
+    defArr[1,1] = smFlux
+    
+    normArr = np.empty((2,2),dtype = object)
+    normArr[0,0] = objSpectra[0]
+    normArr[0,1] = spFlux
+    #print(spFlux)
+    normArr[1,0] = smLamb
+    normArr[1,1] = smNormFlux
+    
+    #fitArr = np.array([spFit,smFit],dtype = object)
     #fitArr = np.array([np.array([spLamb,spInterpol(spLamb)],dtype = object),np.array([smLamb])]) # Ya se vera si se pone
-    SSp.Compare_Norms(defArr, normArr, fitArr = [])
+    SSp.Compare_Norms(defArr, normArr,title = f"Candidato para espectro: {smChosen} con D = {minD}", lines=lines)
     return smChosen,minD,DArr
