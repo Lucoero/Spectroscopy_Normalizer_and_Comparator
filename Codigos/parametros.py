@@ -142,7 +142,7 @@ def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10
     ASI QUE LO QUE HAY QUE HACER ES TRUNCAR LAS LAMBDAS, NUNCA EXTRAPOLAR
     """
         # Normalizamos 
-    spFit, spFlux = normalizar.Normalizar(spLamb,spFlux, iteraciones = 50)
+    #spFit, spFlux = normalizar.Normalizar(spLamb,spFlux, iteraciones = 50)
     """
     SSp.Blank_Spectra(spLamb, spFlux)
     SSp.Blank_Spectra(spLamb,objSpectra[1])
@@ -154,7 +154,7 @@ def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10
     for i in tqdm.tqdm(range(n)):
         smLamb,smFlux = Load.Load_Miles(FilesArr[i], path = dataFolder)
         # Normalizo
-        smFit,smFlux = normalizar.Normalizar(smLamb, smFlux, iteraciones = 50)
+        #smFit,smFlux = normalizar.Normalizar(smLamb, smFlux, iteraciones = 50)
         # Compruebo si el espectro problema o el objetivo tiene menor rango de lambdas
         minLamb = min(np.min(smLamb),spMinLamb)
         maxLamb = max(np.max(smLamb),spMaxLamb)
@@ -181,7 +181,7 @@ def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10
         smChosen.append(FilesArr[currIndex])
     smChosen = np.array(smChosen)
     # Printeo el resultado
-    print(f"KS Tests says that {smChosen[0]} is the most probable spectra with distance {minD[0]}. \n The {nCandidates} Rest Candidates are in the following order:")
+    print(f"Tests says that {smChosen[0]} is the most probable spectra with distance {minD[0]}. {distFunc} was used \n The {nCandidates} Rest Candidates are in the following order:")
     for i in range(nCandidates):
         print(f"{i+1}:", smChosen[i]) 
     print("Showing the comparison of spectras for the minimun distance")
@@ -203,5 +203,5 @@ def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10
     
     #fitArr = np.array([spFit,smFit],dtype = object)
     #fitArr = np.array([np.array([spLamb,spInterpol(spLamb)],dtype = object),np.array([smLamb])]) # Ya se vera si se pone
-    SSp.Compare_Norms(defArr, normArr,title = f"Candidato para espectro: {smChosen} con D = {minD}", lines=lines)
+    SSp.Compare_Norms(defArr, normArr,title = f"Candidato para espectro: {smChosen[0]} con D = {minD[0]}", lines=lines)
     return smChosen,minD,smChosen,DArr

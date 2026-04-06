@@ -104,7 +104,7 @@ def Axe_Compare_Spectra(lambArr,fluxArr, ax,TArr = [],lines = {},show_T = True):
     for i in range(n):          
         ax[i].set_ylabel("Flux (uds)")
         if show_T:
-            ax[i].set_title(f"{i+1}  (T: {TArr[i]} K)",loc="right", y=.5,
+            ax[i].set_title(f"{TArr[i]}",loc="right", y=.5,
                rotation=270, ha="left", va="center")
         #Ploteamos los espectros
         ax[i].plot(lambArr[i],fluxArr[i],linewidth = lWidth)
