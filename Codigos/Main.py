@@ -131,11 +131,11 @@ fitMiles,NMiles = Norm.Normalizar(MLamb,MFlux,iteraciones = 50)
 SSp.Compare_Norms(np.array([np.array([MLamb,MFlux],dtype = object)]),np.array([np.array([MLamb,NMiles],dtype = object)]), np.array([fitMiles]))
 """
 #%% Busqueda del espectro (KS)
-smChosen1,minD1,smCh1,DArr1 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb1,Flux1),lines = lines, distFunc = "WASS", nCandidates = nCan)
+smChosen1,minD1,smCh1,DArr1 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb1,Flux1),lines = lines, distFunc = "KS", nCandidates = nCan, Normalise_Spectras=False)
 """
-smChosen2,minD2,smCh2,DArr2 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb2,Flux2),lines = lines,distFunc = "WASS", nCandidates = nCan)
-smChosen3,minD3,smCh3,DArr3 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb3,Flux3),lines = lines,distFunc = "WASS", nCandidates = nCan)
-smChosen4,minD4,smCh4,DArr4 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb4,Flux4), lines = lines,distFunc = "WASS", nCandidates = nCan)
+smChosen2,minD2,smCh2,DArr2 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb2,Flux2),lines = lines,distFunc = "WASS", nCandidates = nCan, Normalise_Spectras=False)
+smChosen3,minD3,smCh3,DArr3 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb3,Flux3),lines = lines,distFunc = "WASS", nCandidates = nCan, Normalise_Spectras=False)
+smChosen4,minD4,smCh4,DArr4 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb4,Flux4), lines = lines,distFunc = "WASS", nCandidates = nCan, Normalise_Spectras=False)
 """
 #%% Ploteado
 
@@ -161,6 +161,7 @@ fitArr = np.array([fit1,fit2,fit3,fit4],dtype = object)
 SSp.Compare_Norms(defArr,normArr,fitArr = fitArr, lines = lines)
 """
 # Comparamos los candidatos del primero
+"""
 normalCompare1 = []
 normCompare1 = []
 smFit1 = []
@@ -173,6 +174,8 @@ for i in range(len(smCh1)):
     normalCompare1.append(np.array([smLamb,smFlux],dtype = object))
     fit, smNorm = Norm.Normalizar(smLamb, smFlux) 
     smFit1.append(fit)
+    print(smLamb.shape)
+    print(smNorm.shape)
     normCompare1.append(np.array([smLamb,smNorm],dtype = object))
     namesArr1.append(smCh1[i])
 
@@ -181,3 +184,4 @@ smFit1 = np.array(smFit1)
 normCompare1 = np.array(normCompare1)
 
 SSp.Compare_Norms(normalCompare1,normCompare1, fitArr = smFit1, lines = lines, title = "Comparacion para el espectro problema 1",TArr= namesArr1)
+"""
