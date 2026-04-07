@@ -48,6 +48,6 @@ def Normalizar(lamb,flujo, params = [97],start = 4000, end = -1,  filtro = 'med'
     # Ahora normalizamos
     flujo_normalizado = flujo/ajuste
     
-    return np.array([lamb_cortado,normalizada_vieja],dtype = object),flujo_normalizado 
+    return (lamb_cortado,normalizada_vieja),flujo_normalizado 
     
     
