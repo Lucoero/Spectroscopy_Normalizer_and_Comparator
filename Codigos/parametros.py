@@ -109,7 +109,7 @@ def categorizar(wave,flux,lineas,cat):
     """
     return "Hola"
 #%% Comparacion automatica
-def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10**3, lines = {}, distFunc = "WASS", nCandidates = 1, Normalise_Spectras = False):
+def CompareAllSpectra(dataFolder,objSpectra, outFolder = "Outputs", nPoints = 10**3 , lines = {}, distFunc = "WASS", nCandidates = 1, Normalise_Spectras = False):
     """
     CompareAllSpectra
     Dada una carpeta con ficheros en formato miles ([lambda,flux]), y un espectro problema en formato

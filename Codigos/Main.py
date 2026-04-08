@@ -125,6 +125,9 @@ fit1,N1 = Norm.Normalizar(Lamb1,Flux1,params,iteraciones = nIter)
 fit2,N2 = Norm.Normalizar(Lamb2,Flux2,params,iteraciones = nIter)
 fit3,N3 = Norm.Normalizar(Lamb3,Flux3,params,iteraciones = nIter)
 fit4,N4 = Norm.Normalizar(Lamb4,Flux4,params,iteraciones = nIter)
+
+Norm.Normalise_Folder("Catalogo_Miles", "Miles_Normalizado")
+
 #%%% Prueba graficos
 """
 normal1 = (Lamb1,Flux1)
@@ -145,7 +148,7 @@ smChosen2,minD2,smCh2,DArr2 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb2,Flu
 #0252, HD057061, O9II C
 #0873, HD219978, K4.5Ib C
 smChosen3,minD3,smCh3,DArr3 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb3,Flux3),lines = lines,distFunc = "WASS", nCandidates = nCan,Normalise_Spectras = False)
-#0723, CD-24-15398,
+#0723, CD-24-15398, K0, pero es basicamente porque esta con las K0 del catalogo Hiparcos (ChatGPT). Asi que no os fieis
 #0921, HD107513, Am C
 #0473, HD117200, F0 D
 smChosen4,minD4,smCh4,DArr4 = Par.CompareAllSpectra("Catalogo_Miles", (Lamb4,Flux4), lines = lines,distFunc = "WASS", nCandidates = nCan,Normalise_Spectras = False)
