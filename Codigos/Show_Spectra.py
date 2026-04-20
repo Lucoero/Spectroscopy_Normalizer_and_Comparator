@@ -118,29 +118,22 @@ def Axe_Compare_Spectra(lambArr,fluxArr, ax,NameArr = [],lines = {}, show_yName 
     """
     n = len(ax)
     ax[n-1].set_xlabel(r"$\lambda\ (\mathring{A})$")
-    
-    # Esto da problemas si el array de flujos no es una matriz cuadrada
-        # Arreglo: creamos una matriz cuadrada con nans y buscamos ahi
-    pad = Pad_Array(fluxArr) 
-    minLine = max(np.nanmin(pad)*yscale,0)
-    maxLine = min(np.nanmax(pad)*yscale,5)
-    trans = ax[0].get_xaxis_transform() # x in data untis, y in axes fraction # Para tener la nota de las lineas fuera del plot
+
     if len(NameArr) == 0:
         NameArr = [""] *n
-    for i in range(n):   
+    if show_yName:
+        ax[0].set_ylabel("Flux (uds)")
+    ax[0].set_title(NameArr[0],loc="right", y=.5,
+       rotation=270, ha="left", va="center")
+    #Ploteamos los espectros
+    Axe_Lined_Spectra(lambArr[0], fluxArr[0], lines, ax[0],name = NameArr[0],show_yName=True,show_xName = True)
+    for i in range(1,n):   
         if show_yName:
             ax[i].set_ylabel("Flux (uds)")
         ax[i].set_title(NameArr[i],loc="right", y=.5,
            rotation=270, ha="left", va="center")
         #Ploteamos los espectros
-        ax[i].plot(lambArr[i],fluxArr[i],linewidth = lWidth)  
-        ax[i].set_ylim(minLine,maxLine)
-    for name in lines:
-        ax[0].plot((lines[name],lines[name]), (minLine,maxLine),label = name,linestyle = "dashed",linewidth = lWidth * lineScale) # Este para el label
-        ax[0].annotate(name,xy = (lines[name] + 5,maxLine -0.1*maxLine), xycoords = "data", ha = 'center', va = 'bottom',rotation = 'vertical',size = lineSize )
-        
-        for i in range(1,n):
-            ax[i].plot((lines[name],lines[name]), (minLine,maxLine), linestyle = "dashed",linewidth = lWidth * lineScale)
+        Axe_Lined_Spectra(lambArr[i], fluxArr[i], lines, ax[i],name = NameArr[i],show_yName=True,show_xName = False,show_LineName=False)
     return 
 def Compare_Norms(defArr,normArr,fitArr = [],NameArr = False,lines = {}, title = "Spectra Normalized"):
     """

@@ -15,18 +15,38 @@ import Herramientas as Herr
 import normalizar as Norm
 #%% Variables entrada
 
-medB = ".fits"
-bigB = ".fits"
+medB = "B5V.fits"
+bigB = "B5Ib.fits"
 
-lines = {} # Escogemos las que se vean bien
+
+lineas_metalicas= {
+    "Ca I 4227": 4227,
+    "Ca II (K)": 3934,
+    "Ca II (H)": 3968,
+    "Mg II 4481": 4481,
+    }
+
+lineas_balmer= {
+    r'$H_{\gamma}$': 4340,
+    }
+
+lineas_helio= {
+    "He I 4922": 4922,
+    }
+
+lines= {}
+lines.update(lineas_metalicas)
+lines.update(lineas_balmer)
+lines.update(lineas_helio)
+
 
 #%% Proceso principal
 
-medFlux, medLamb = LD.Load_Miles(medB)
-bigFlux,bigLamb = LD.Load_Miles(bigB)
+medFlux, medLamb = LD.Load_Miles(medB,path = "Practica_3")
+bigFlux,bigLamb = LD.Load_Miles(bigB, path = "Practica_3")
 
 # Los ploteamos para verlos
-SSp.Compare_Spectra([medFlux,bigFlux],[medLamb,bigLamb], TArr = ["Estrella 1", "Estrella 2"], title = "Estrellas Escogidas", lines = lines)
+SSp.Compare_Spectra([medFlux,bigFlux],[medLamb,bigLamb], NameArr = ["Estrella B5V", "Estrella B5 Ib"], title = "Estrellas Escogidas", lines = lines)
 
 # Normalizamos
 
