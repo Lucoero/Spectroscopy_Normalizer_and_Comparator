@@ -46,14 +46,15 @@ def continuo(fr,pr=0.1,d=5,sg=False):
             aux[j] = f[j]
     return aux
 
-def lucas(l,fr,rang,pr=0.1,d=10):
+def Norm_Agg(l,fr,rang,pr=0.1,d=10):
 
-    a = continuo(fr,sg=True)
+    a = continuo(fr,sg=False) # Sg es usar savgol o no
 
     norm = fr/a
 
     plt.plot(l,norm)
     plt.show()
+    return
 
 
 def npcont(l,f,pr=0.1,w=5,d=3):
