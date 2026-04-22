@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #%% Variables globales de plots
-yscale = 1.01 # Escala para escoger el tamanno de los plots
+yscale = 1.05 # Escala para escoger el tamanno de los plots
 lWidth = 1 # Grosor de las lineas de plot
 lineScale = 1 # Escala para las lineas atomicas
 lineSize = 8 # Tamaño del texto de las lineas
@@ -162,7 +162,8 @@ def Compare_Norms(defArr,normArr,fitArr = [],NameArr = False,lines = {}, title =
         Axe_Blank_Spectra(lambDef, fluxDef,ax[0]) # lineas solo en el normalizado
         lambNorm,fluxNorm = normArr[0]
         Axe_Lined_Spectra(lambNorm, fluxNorm, lines,ax[1], show_yName = False)
-        ax[1].set_ylim(0,1.5)
+        #ax[1].set_ylim(np.min(fluxNorm)*(abs(1-yscale)),np.max(fluxNorm)*yscale)
+        #ax[1].set_ylim(0,1.4)
         # Ponemos los fits
         if len(fitArr) == 1:
             ajustes, = ax[0].plot(fitArr[0][0],fitArr[0][1],linestyle = "dashed")# label = "ajuste")
@@ -170,10 +171,19 @@ def Compare_Norms(defArr,normArr,fitArr = [],NameArr = False,lines = {}, title =
         elif len(fitArr) == 2:
             ajustes, = ax[0].plot(fitArr[0],fitArr[1],linestyle = "dashed")# label = "ajuste")
     else:
+
         # En la primera ponemos las lineas
         lambDef,fluxDef = defArr[0]
+        # Para usar misma escala de ejes
+        maxFlux = np.max(fluxDef)
+        minFlux = np.min(fluxDef)
+        
         Axe_Blank_Spectra(lambDef, fluxDef, ax[0,0], show_xName=False) # Lineas solo en el normalizado
         lambNorm,fluxNorm = normArr[0]
+        
+        maxNFlux = np.max(fluxNorm)
+        minNFlux = np.min(fluxNorm)
+        
         Axe_Lined_Spectra(lambNorm, fluxNorm,lines,ax[0,1],name = NameArr[0],show_yName = False, show_xName= False)
         
         # En la ultima ponemos los ejes
@@ -181,6 +191,8 @@ def Compare_Norms(defArr,normArr,fitArr = [],NameArr = False,lines = {}, title =
         Axe_Blank_Spectra(lambDef, fluxDef, ax[-1,0]) # Lineas solo en el normalizado
         lambNorm,fluxNorm = normArr[-1]
         Axe_Lined_Spectra(lambNorm, fluxNorm,lines,ax[-1,1],name = NameArr[-1],show_yName = False,show_LineName = False)
+        
+        #if np.max(fluxNorm) > 
         for i in range(1,n-1):
             lambDef,fluxDef = defArr[i]
             Axe_Blank_Spectra(lambDef, fluxDef, ax[i,0], show_xName = False) # Lineas solo en el normalizado

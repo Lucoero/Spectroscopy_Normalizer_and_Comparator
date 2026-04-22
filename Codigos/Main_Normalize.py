@@ -53,7 +53,7 @@ else:
 normSpectra = [lamb,fluxN]
 originalSpectra = [lamb,flux]
 
-SSp.Compare_Norms([originalSpectra],[normSpectra],fitArr = [fit],NameArr = ["S1"], title = "Normalización de la Estrella 1")
+SSp.Compare_Norms([originalSpectra],[normSpectra],fitArr = [fit],NameArr = ["S1"], title = "Normalización de la Estrella 1") #lines = lines)
 # Guardo
 LD.Write_Data([normSpectra],[outFilename],outDir)
 
