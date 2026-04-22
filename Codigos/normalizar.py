@@ -86,8 +86,10 @@ def Continuo(fr,pr=0.1,d=5,sg=False,rl=0.5):
         a = int(pks[i] - ws[i])
         b = int(pks[i] + ws[i]) # Porque el pico puede estar en el borde
         
-        if b > len(f)-1: b = len(f)-1
-        if a < 0: a = 0
+        if b >= len(f)-1: b = len(f)-1
+        if b <= 0: b = 0
+        if a <= 0: a = 0
+        if a >= len(f)-1: a = len(f)-1
         
         lsup = f[b]
         linf = f[a]
@@ -122,11 +124,11 @@ def Norm_Agg(lamb,flujo,params = [4000,-1,0.1,10,False,0.5]):
     ajuste = np.copy(flujo)
     
     # Buscamos los indices de corte
-    start_index = np.where(lamb > start)[0][0]
+    start_index = np.where(lamb >= start)[0][0]
     if end >= lamb[-1]: 
         end = -1
     elif end != -1: 
-        end = np.where(lamb > end)[0][0] 
+        end = np.where(lamb >= end)[0][0] 
         
     flujo_cortado = flujo[start_index:end]
     lamb_cortado = lamb[start_index:end]
@@ -163,12 +165,15 @@ def Normalise_Folder(objPathFolder,endPathFolder, normFunc, funcParams):
     outNameList = []
     for i in tqdm.tqdm(range(n)):
         currFile = FilesArr[i]
-        lamb, flux,starName = LD.Load_Miles(currFile,path=objPathFolder,returnName = True)
-        if type(lamb) == type(None):
+        ext = os.path.basename(currFile).split(".")[-1]
+        if ext == "dat" or ext == "asc":
             lamb, flux = LD.Load_Dat(currFile,path=objPathFolder) # Dat no da el nombre de la estrella
-            if lamb == None:
-                print (f"ERROR: FILE {currFile} does not have correct format. Skipping...")
-                pass
+            starName = ""
+        elif ext == "fits":
+            lamb, flux,starName = LD.Load_Miles(currFile,path=objPathFolder,returnName = True)
+        else:
+            print (f"ERROR: FILE {currFile} does not have correct format. Skipping...")
+            pass
         if starName != "":
             starName = "_" + starName
         fit,fluxNorm = normFunc(lamb,flux, params = funcParams)    
