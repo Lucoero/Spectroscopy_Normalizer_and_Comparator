@@ -129,7 +129,7 @@ params = [97] # Es el filtro de mediana (que separacion consideras para cortar y
 startNorm = 4000
 endNorm = -1
 savgolParams = [97,startNorm,endNorm, "med",nIter]
-aggParams = [startNorm,endNorm,0.1,10,False,0.7] # El ultimo parametro es la altura relativa donde interpolamos el pico (de abajo a arriba pico. 0 Es coger el fondo del pico)
+aggParams = [startNorm,endNorm,0.1,10,False,0.5] # El ultimo parametro es la altura relativa donde interpolamos el pico (de abajo a arriba pico. 0 Es coger el fondo del pico)
 
 # Normalizamos
 ajusteProblema = []

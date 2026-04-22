@@ -161,7 +161,7 @@ def Compare_Norms(defArr,normArr,fitArr = [],NameArr = False,lines = {}, title =
         lambDef,fluxDef = defArr[0]
         Axe_Blank_Spectra(lambDef, fluxDef,ax[0]) # lineas solo en el normalizado
         lambNorm,fluxNorm = normArr[0]
-        Axe_Lined_Spectra(lambNorm, fluxNorm, lines,ax[1], yName = False)
+        Axe_Lined_Spectra(lambNorm, fluxNorm, lines,ax[1], show_yName = False)
         # Ponemos los fits
         if len(fitArr) != 0:
             ajustes, = ax[0].plot(fitArr[0,0],fitArr[0,1],linestyle = "dashed")# label = "ajuste")
