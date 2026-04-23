@@ -16,14 +16,14 @@ import Herramientas as Herr
 import normalizar as Norm
 import LinesLib as LinesLib
 #%% Variables entrada
-isDat = True
-starFile = "Estrella4.dat"
-starDir = "Estrellas_Problema"
-outDir = "Estrellas_Problema"
-outFilename = "SN4"
+isDat = False
+starFile = "F6V.fits"
+starDir = "p2EspectrosNormalizar"
+outDir = "p2EspectrosNormalizar"
+outFilename = "Estrella_F"
 
-figTitle = "Estrella Problema 3"
-rl = 0.5 # Altura relativa de los picos empezando desde el fondo desde el cual mides la altura. LO BASICO A CAMBIAR
+figTitle = "HD206826, estrella tipo F6 V Normalizada"
+rl = 0.85 # Altura relativa de los picos empezando desde el fondo desde el cual mides la altura. LO BASICO A CAMBIAR
 
 startNorm = 4000 # Lamb donde quieres empezar la normalizacion
 endNorm = 7500 # Indice donde quieres acabar la normalizacion
