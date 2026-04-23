@@ -16,17 +16,17 @@ import Herramientas as Herr
 import normalizar as Norm
 import LinesLib as LinesLib
 #%% Variables entrada
-isDat = False
-starFile = "F6V.fits"
-starDir = "p2EspectrosNormalizar"
-outDir = "p2EspectrosNormalizar"
-outFilename = "Estrella_F"
+isDat = True
+starFile = "Estrella2.dat"
+starDir = "Estrellas_Problema"
+outDir = "Estrellas_Problema"
+outFilename = "SN2"
 
-figTitle = "HD206826, estrella tipo F6 V Normalizada"
-rl = 0.85 # Altura relativa de los picos empezando desde el fondo desde el cual mides la altura. LO BASICO A CAMBIAR
+figTitle = "Estrella Problema 4"
+rl = 0.5 # Altura relativa de los picos empezando desde el fondo desde el cual mides la altura. LO BASICO A CAMBIAR
 
 startNorm = 4000 # Lamb donde quieres empezar la normalizacion
-endNorm = 7500 # Indice donde quieres acabar la normalizacion
+endNorm = 7000 # Indice donde quieres acabar la normalizacion
 nIter = 50 # N iteraciones si usas filtro savgol
 savgolParams = [97,startNorm,endNorm, "med",nIter]
 """
@@ -41,8 +41,8 @@ aggParams = [startNorm,endNorm,0.1,10,False,rl] # El ultimo parametro es la altu
 useAgg = True
 
 # Si quieres normalizar una carpeta entera
-normFolder = "Catalogo_Miles"
-outputFolder = "MilesNormalizado"
+normFolder = "Catalogo_Ignacio"
+outputFolder = "IgnacioNormalizado"
 #%% Proceso principal
 lines = LinesLib.lines
 
@@ -68,4 +68,4 @@ LD.Write_Data([normSpectra],[outFilename],outDir)
 
 #%% Si queremos normalizar un folder entero
 #aggParams[-1] = 0.5 # Prominencia siempre 0.5
-#Norm.Normalise_Folder(normFolder, outputFolder, Norm.Norm_Agg, aggParams)
+Norm.Normalise_Folder(normFolder, outputFolder, Norm.Norm_Agg, aggParams)
