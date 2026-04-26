@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['Codigos\\parametros.py', 'Codigos\\Show_Spectra.py', 'Codigos\\Main_Comparador.py']
+recent_files = ['Codigos\\Main_Comparador.py', 'Codigos\\parametros.py', 'Codigos\\Show_Spectra.py', 'Codigos\\Main_Normalize.py', 'Codigos\\normalizar.py', 'Codigos\\Load_Data.py']
 
 [main]
 version = 0.2.0

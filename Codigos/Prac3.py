@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.interpolate as Interpolate
 import scipy.optimize as Optimize
+import scipy.stats as stats
+import scipy.special as special
 
 import Load_Data as LD
 import Show_Spectra as SSp
@@ -36,11 +38,28 @@ SSp.Lined_Spectra(medFlux,medLamb,lines = lines, title = "Espectro de la estrell
 
 # Vemos normalizaciones
 
+# Obtenemos las propiedades de la linea
+
 # Aislamos las lineas que queremos y las aproximamos
+lambMet = lines["Ca II (K)"]
+lambHe = lines["He I 4922"]
+lambBa = lines[r'$H_{\gamma}$']
+
+
 def Gauss_Line(x,A,mu,sigma):
     return A*np.exp((x-mu)**2/(2*(sigma)**2))
-    
-def Line_Fit(Lamb,Flux):
+
+def Lorentz_Line(x,A,mu,sigma):
+    return A*1/(1+(x-mu)**2/(sigma**2))
+
+def Voigt_Line(x,A,mu,gamma): 
+    """
+    Detalle interesante: Si obtenemos sigma= 0 es lorentziana. gamma = 0, es gaussiana.
+    gamma es la anchura a media altura
+    """
+    return A*special.voigt_profile(x,mu,gamma) 
+
+def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
     """
     Line_Fit:
         Dado un conjunto de datos de flujos y longitudes de onda (que conforman la linea),
@@ -53,16 +72,38 @@ def Line_Fit(Lamb,Flux):
             4. Una funcion modelo a la que queremos aproximar (en nuestro caso una Gaussiana con 1. y 2,, 
                                                                pero la podemos modificar ligeramente)
     """
-    # Buscamos el centro de la linea, su anchura media y profundidad como semilla base
-    mu = 0 # Centro linea
-    sigma = 0 # Anchura linea
-    A = 0 # Altura linea
-    # Aproximamos con scipy
-    bestA,bestMu,bestSigma = Optimize.curve_fit(Gauss_Line,Lamb,Flux,[A,mu,sigma])[0]
+    profiles = 3 # Numero de perfiles que usamos
+    dArr = np.zeros(profiles) # Array de distancias que obtenemos
+    namesArr = np.zeros(profiles,dtype = str) # Array del nombre de cada metodo
+    
+    # Aproximamos con scipy a Gaussiana
+    (gaussA,gaussMu,gaussSigma),gaussErr = Optimize.curve_fit(Gauss_Line,Lamb,Flux,[lineHeight,lineCenter,lineWidth])
+    dArr[0] = stats.wasserstein_distance(Flux, Gauss_Line(Lamb,gaussA,gaussMu,gaussSigma))
+    namesArr[0] = "Gaussian Profile"
+    
+    # Aproximamos con scipy a Lorentziana
+    (lorA,lorMu,lorSigma),lorErr = Optimize.curve_fit(Lorentz_Line,Lamb,Flux,[lineHeight,lineCenter,lineWidth])
+    dArr[1] = stats.wasserstein_distance(Flux, Lorentz_Line(Lamb,lorA,lorMu,lorSigma))
+    namesArr[1] = "Lorentzian Profile"
+    
+    # Aproximamos con scipy a perfil de Voigt
+    voigtA,voigtMu,voigtGamma,voigtErr = Optimize.curve_fit(Voigt_Line, Lamb, Flux, [lineHeight,lineCenter,lineWidth]) 
+    dArr[2] = stats.wasserstein_distance(Flux, Voigt_Line(Lamb,voigtA,voigtMu,voigtGamma))
+    namesArr[2] = "Voigt Profile"
+    
+    # Tomamos el minimo
+    minD = np.min(dArr)
+    minIndex = np.where(dArr == minD)
+    minName = namesArr[minIndex]
     
     # Visualizamos
-    bestFlux = Gauss_Line(Lamb,bestA,bestMu,bestSigma)
-    SSp.Blank_Spectra([Lamb,Lamb], [Flux,bestFlux],title = "Ajuste obtenido",multiSpectra = True,spectrasNames = ["Original", "Ajuste"])
-    return bestA,bestMu,bestSigma
+    gaussFlux = Gauss_Line(Lamb,gaussA,gaussMu,gaussSigma)
+    lorFlux = Lorentz_Line(Lamb, lorA, lorMu, lorSigma)
+    voigtFlux = Voigt_Line(Lamb, voigtA, voigtMu, voigtGamma)
+    SSp.Blank_Spectra([Lamb,Lamb,Lamb,Lamb], [Flux,gaussFlux,lorFlux,voigtFlux],title = "Distintos perfiles de líenas obtenidos",multiSpectra = True,spectrasNames = ["Original", "Gaussian","Lorentzian","Voigt"])
+    
+    print(f"Line_Fit concludes that the best profile is {minName}, with distance D = {minD}")
+    print("Returning all profiles data and best index")
+    return [[gaussA,gaussMu,gaussSigma], [lorA,lorMu,lorSigma],[voigtA,voigtMu,voigtGamma]], minIndex
 
 
