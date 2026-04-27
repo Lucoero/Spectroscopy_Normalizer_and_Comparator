@@ -104,8 +104,8 @@ def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
         dArr[0] = stats.wasserstein_distance(Flux, Gauss_Line(Lamb,gaussA,gaussMu,gaussSigma))
         print(gaussA,gaussMu,gaussSigma)
     except RuntimeError: # No converge --> Muy mala aproximacion
-        (gaussA,gaussMu,gaussSigma),gaussErr = (0.001,0.001,0.001),np.infty
-        dArr[0] = np.infty
+        (gaussA,gaussMu,gaussSigma),gaussErr = (0.001,0.001,0.001),np.inf
+        dArr[0] = np.inf
     namesArr.append("Gaussian Profile")
     
     # Aproximamos con scipy a Lorentziana
@@ -113,8 +113,8 @@ def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
         (lorA,lorMu,lorSigma),lorErr = Optimize.curve_fit(Lorentz_Line,Lamb,Flux,p0=[lineHeight,lineCenter,lineWidth])
         dArr[1] = stats.wasserstein_distance(Flux, Lorentz_Line(Lamb,lorA,lorMu,lorSigma))
     except RuntimeError:
-        (lorA,lorMu,lorSigma),lorErr = (0.001,0.001,0.001),np.infty
-        dArr[1] = np.infty
+        (lorA,lorMu,lorSigma),lorErr = (0.001,0.001,0.001),np.inf
+        dArr[1] = np.inf
     namesArr.append("Lorentzian Profile")
     
     # Aproximamos con scipy a perfil de Voigt
@@ -122,14 +122,14 @@ def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
         (voigtA,voigtMu,voigtGamma),voigtErr = Optimize.curve_fit(Voigt_Line, Lamb, Flux, p0=[lineHeight,lineCenter,lineWidth]) 
         dArr[2] = stats.wasserstein_distance(Flux, Voigt_Line(Lamb,voigtA,voigtMu,voigtGamma))
     except RuntimeError:
-        (voigtA,voigtMu,voigtGamma),voigtErr = (0.001,0.001,0.001),np.infty
-        dArr[2] = np.infty
+        (voigtA,voigtMu,voigtGamma),voigtErr = (0.001,0.001,0.001),np.inf
+        dArr[2] = np.inf
     namesArr.append("Voigt Profile")
     #print(dArr)
     # Tomamos el minimo
-    if dArr.all == np.infty:
+    if dArr.all == np.inf:
         print("ERROR: NO METHOD HAS CONVERGED. Returning seedValues ")
-        minD = np.infty
+        minD = np.inf
         minIndex = -1
         minName = "Unknown"
     else:
