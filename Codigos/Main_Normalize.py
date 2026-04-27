@@ -34,6 +34,7 @@ Agg Params:
     startNorm: El lambda en el que empezamos el ajuste (A)
     endNorm: El lambda en el que acabamos el ajuste (A). Si se usa -1 llega hasta el final
     pr: Prominencia de lo que se considera pico
+    d: distancia entre picos
     sg: Si queremos usar filtro savgol para eliminar ruido antes de normalizar
     rl: Altura relativa de los picos empezando desde el fundo del pico
 """

@@ -53,10 +53,11 @@ def Axe_Blank_Spectra(lambList,fluxList,ax, name = False, show_yName = True, sho
         nSpectra = len(lambList)
         if spectrasNames == []:
             spectrasNames = [f"{i}" for i in range(nSpectra)]
-        for i in nSpectra:
+        for i in range(nSpectra):
             ax.plot(lambList[i],fluxList[i], label = spectrasNames[i])
             ax.legend()
-    ax.plot(lambList,fluxList, linewidth = lWidth)
+    else:
+        ax.plot(lambList,fluxList, linewidth = lWidth)
     if type(name) != bool:
         ax.set_title(name,loc="right", y=.5,
         rotation=270, ha="left", va="center")
