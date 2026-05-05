@@ -10,7 +10,6 @@ import scipy.stats as stats
 import scipy.special as special
 from scipy.signal import find_peaks
 from scipy.signal import peak_widths
-
 import Load_Data as LD
 import Show_Spectra as SSp
 
@@ -58,7 +57,8 @@ def Get_Lines_Features(Lamb,Flux,lines,searchWindow = 500):
         #print(linesFeatures[i,0])
         # Obtenemos anchura
         aux = peak_widths(-fCrop,[peakIndex[indexMin]],rel_height = 0.5) # La altura es
-        width =  aux[0]
+        width =  aux[0] # ojo, esta en puntos interpolado, hay que pasar a lambdas
+        width = width * (lCrop[1]-lCrop[0]) # Por suerte el espaciado de lambdas es uniforme
         window_Width = peak_widths(-fCrop,[peakIndex[indexMin]],rel_height =0.95)[0]
         height =  fCrop[peakIndex[indexMin]] - 1
         linesFeatures[i,1] = width[0]/2
@@ -72,17 +72,17 @@ def Get_Lines_Features(Lamb,Flux,lines,searchWindow = 500):
     return linesFeatures,lambsCrop,fluxsCrop
 
 def Gauss_Line(x,A,mu,sigma):
-    return 1-A*np.exp((x-mu)**2/(2*(sigma)**2))
+    return 1+A*np.exp(-(x-mu)**2/(2*(sigma)**2)) # El menos esta implicito en A
 
 def Lorentz_Line(x,A,mu,sigma):
-    return 1-A/(1+(x-mu)**2/(sigma**2))
+    return 1+A/(1+(x-mu)**2/(sigma**2))
 
-def Voigt_Line(x,A,mu,gamma): 
+def Voigt_Line(x,A,mu,gamma,sigma): 
     """
     Detalle interesante: Si obtenemos sigma= 0 es lorentziana. gamma = 0, es gaussiana.
     gamma es la anchura a media altura
     """
-    return 1-A*special.voigt_profile(x,mu,gamma) 
+    return 1+A*special.voigt_profile(x-mu,sigma,gamma) 
 
 def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
     """
@@ -100,12 +100,11 @@ def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
     profiles = 3 # Numero de perfiles que usamos
     dArr = np.zeros(profiles) # Array de distancias que obtenemos
     namesArr = ["Gaussian Profile", "Lorentzian Profile", "Voigt Profile"] # Array del nombre de cada metodo
-    
     # Aproximamos con scipy a Gaussiana
     try: 
         (gaussA,gaussMu,gaussSigma),gaussErr = Optimize.curve_fit(Gauss_Line,Lamb,Flux,p0 = [lineHeight,lineCenter,lineWidth])
         dArr[0] = stats.wasserstein_distance(Flux, Gauss_Line(Lamb,gaussA,gaussMu,gaussSigma))
-        print(gaussA,gaussMu,gaussSigma)
+        #print(gaussA,gaussMu,gaussSigma)
     except RuntimeError: # No converge --> Muy mala aproximacion
         (gaussA,gaussMu,gaussSigma),gaussErr = (None,None,None),np.inf
         dArr[0] = np.inf
@@ -121,10 +120,10 @@ def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
     
     # Aproximamos con scipy a perfil de Voigt
     try:
-        (voigtA,voigtMu,voigtGamma),voigtErr = Optimize.curve_fit(Voigt_Line, Lamb, Flux, p0=[lineHeight,lineCenter,lineWidth]) 
-        dArr[2] = stats.wasserstein_distance(Flux, Voigt_Line(Lamb,voigtA,voigtMu,voigtGamma))
+        (voigtA,voigtMu,voigtGamma,voigtSigma),voigtErr = Optimize.curve_fit(Voigt_Line, Lamb, Flux, p0=[lineHeight,lineCenter,lineWidth,lineWidth]) 
+        dArr[2] = stats.wasserstein_distance(Flux, Voigt_Line(Lamb,voigtA,voigtMu,voigtGamma,voigtSigma))
     except RuntimeError:
-        (voigtA,voigtMu,voigtGamma),voigtErr = (None,None,None),np.inf
+        (voigtA,voigtMu,voigtGamma),voigtErr = (None,None,None,None),np.inf
         dArr[2] = np.inf
 
     #print(dArr)
@@ -141,7 +140,7 @@ def Line_Fit(Lamb,Flux, lineCenter,lineWidth,lineHeight):
         
         print(f"Line_Fit concludes that the best profile is {minName}, with distance D = {minD}")
         print(f"All distances: {dArr}")
-    return [np.array([gaussA,gaussMu,gaussSigma]), np.array([lorA,lorMu,lorSigma]),np.array([voigtA,voigtMu,voigtGamma])], minIndex
+    return [np.array([gaussA,gaussMu,gaussSigma]), np.array([lorA,lorMu,lorSigma]),np.array([voigtA,voigtMu,voigtGamma,voigtSigma])], minIndex
 
 
 
@@ -176,7 +175,7 @@ fits = ["Gaussiana","Lorentziana","Voigt", "No concluyente (no convergencia)"]
 # Buscamos el mejor perfil
 for i in range(nlines):
     # Obtenemos los parametros para cada 
-    print(40*"-" + f"Resultados para la linea {linesNames[i]}:")
+    print(30*"-" +"\n" +  f"Resultados para la linea {linesNames[i]}:")
 
     medParams, medIndex = Line_Fit(medLambsCrop[i],medFluxsCrop[i],medFea[i,0],medFea[i,1],medFea[i,2])
     bigParams,bigIndex = Line_Fit(bigLambsCrop[i],bigFluxsCrop[i],bigFea[i,0],bigFea[i,1],bigFea[i,2])
@@ -199,7 +198,7 @@ for i in range(nlines):
             Selected = FluxToPlot[-1] # Que es el que acabamos de añadir
     if not (medParams[2][0] == None):
         LambToPlot.append(medLambsCrop[i])
-        FluxToPlot.append(Voigt_Line(medLambsCrop[i],medParams[2][0],medParams[2][1],medParams[2][2]))
+        FluxToPlot.append(Voigt_Line(medLambsCrop[i],medParams[2][0],medParams[2][1],medParams[2][2],medParams[2][3]))
         NamesToPlot.append("Voigt")
         if medIndex == 2:
             Selected = FluxToPlot[-1] # Que es el que acabamos de añadir
@@ -226,9 +225,9 @@ for i in range(nlines):
         if bigIndex == 1:
             Selected = FluxToPlot[-1] # Que es el que acabamos de añadir
     if not (bigParams[2][0] == None):
-        print(bigParams[2][0])
+        # print(bigParams[2][0])
         LambToPlot.append(bigLambsCrop[i])
-        FluxToPlot.append(Voigt_Line(bigLambsCrop[i],bigParams[2][0],bigParams[2][1],bigParams[2][2]))
+        FluxToPlot.append(Voigt_Line(bigLambsCrop[i],bigParams[2][0],bigParams[2][1],bigParams[2][2],bigParams[2][3]))
         NamesToPlot.append("Voigt")
         if bigIndex == 2:
             Selected = FluxToPlot[-1] # Que es el que acabamos de añadir
@@ -242,7 +241,7 @@ for i in range(nlines):
     print(f"\t Posicion (A): {medParams[i][1]}")
     print(f"\t Anchura a media altura (A): {medParams[i][2]}")
     print("")
-    print(80*("*"))
+    print(30*("*"))
     print(f"--> ESTRELLA {bigB}, linea {linesNames[i]}:")
     print(f"\t Mejor Fit: {fits[bigIndex]}")
     print(f"\t Amplitud (uds): {bigParams[i][0]}")
